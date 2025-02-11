@@ -1,5 +1,4 @@
+tensorflow-cpu==2.10.0
 streamlit
-transformers
-tensorflow
-nltk
-tf-keras
+numpy
+pillow
