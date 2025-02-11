@@ -1,5 +1,7 @@
-
-tensorflow==2.18.0
 streamlit
+transformers
+tensorflow-cpu==2.10.0
+nltk
+tf-keras
 numpy
 pillow
