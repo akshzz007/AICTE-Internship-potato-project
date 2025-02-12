@@ -28,10 +28,10 @@ def model_prediction(test_image):
 st.sidebar.title("🌿 Plant Disease Detection System")
 app_mode = st.sidebar.selectbox('Select Page', ['Home', 'Disease Recognition'])
 
-# ✅ Display Image
+# ✅ Display Image (Fixed Warning)
 try:
     img = Image.open('diseases.png')
-    st.image(img, use_column_width=True)
+    st.image(img, use_container_width=True)  # ✅ Fixed the deprecated parameter
 except FileNotFoundError:
     st.warning("⚠️ Warning: diseases.png not found!")
 
@@ -47,7 +47,7 @@ elif app_mode == 'Disease Recognition':
     test_image = st.file_uploader('📤 Upload an Image:', type=['jpg', 'png', 'jpeg'])
 
     if test_image:
-        st.image(test_image, use_column_width=True, caption="Uploaded Image")
+        st.image(test_image, use_container_width=True, caption="Uploaded Image")  # ✅ Fixed the deprecated parameter
 
         if st.button('🔮 Predict'):
             st.snow()
@@ -58,4 +58,5 @@ elif app_mode == 'Disease Recognition':
             if result_index is not None:
                 class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___Healthy']
                 st.success(f'🌱 Model Prediction: **{class_name[result_index]}**')
+
 
