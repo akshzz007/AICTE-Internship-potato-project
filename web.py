@@ -9,11 +9,14 @@ def model_prediction(test_image):
     # Correcting model path
     model_path = os.path.join(os.getcwd(), "trained_plant_disease_model.keras")
     
+    # Debugging Step: Print Model Path
+    st.write(f"🔍 Checking Model Path: `{model_path}`")
+
     if not os.path.exists(model_path):
         st.error("⚠️ Model file not found! Please upload the correct model.")
         return None
     
-    model = tf.keras.models.load_model(model_path)
+    model = tf.keras.models.load_model(model_path, compile=False)  # ✅ Load model with compile=False
 
     # Convert UploadedFile to Image
     image = Image.open(test_image)
@@ -58,5 +61,4 @@ elif app_mode == 'Disease Recognition':
             if result_index is not None:
                 class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___Healthy']
                 st.success(f'🌱 Model Prediction: **{class_name[result_index]}**')
-
 
