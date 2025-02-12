@@ -16,3 +16,11 @@ TensorFlow / Keras – for model training and evaluation.
 OpenCV & Matplotlib – for image processing and visualization.
 Python – for scripting and data handling.
 Jupyter Notebook / Colab – for training and experimentation.
+
+## Model Files
+
+You can download the trained model files from the following links:
+
+- [Download trained_plant_disease_model.keras](https://drive.google.com/file/d/1g5bTVxkdDHs0CPuXGaFyOCWREbEEPDx-/view?usp=sharing)
+- [Download trained_model.h5](https://drive.google.com/file/d/1Mg2QkDYO1PdTlur5De79zxmBSSkmtKiw/view?usp=sharing)
+
