@@ -62,3 +62,4 @@ elif app_mode == 'Disease Recognition':
                 class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___Healthy']
                 st.success(f'🌱 Model Prediction: **{class_name[result_index]}**')
 
+
