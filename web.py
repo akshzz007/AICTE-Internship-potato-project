@@ -4,7 +4,7 @@ import numpy as np
 import os
 from PIL import Image
 
-# ✅ Function for Model Prediction (Fixed)
+#  Function for Model Prediction (Fixed)
 def model_prediction(test_image):
     # Correcting model path
     model_path = os.path.join(os.getcwd(), "trained_plant_disease_model.keras")
@@ -61,5 +61,6 @@ elif app_mode == 'Disease Recognition':
             if result_index is not None:
                 class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___Healthy']
                 st.success(f'🌱 Model Prediction: **{class_name[result_index]}**')
+
 
 
