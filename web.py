@@ -65,3 +65,4 @@ elif app_mode == 'Disease Recognition':
 
 
 
+
