@@ -1,68 +1,152 @@
 import streamlit as st
 import tensorflow as tf
 import numpy as np
-import os
 from PIL import Image
+import os
 
-#  Function for Model Prediction (Fixed)
-def model_prediction(test_image):
-    # Correcting model path
-    model_path = os.path.join(os.getcwd(), "trained_plant_disease_model.keras")
-    
-    # Debugging Step: Print Model Path
-    st.write(f"🔍 Checking Model Path: `{model_path}`")
+st.set_page_config(
+    page_title="Plant Disease Detection",
+    page_icon="🌿",
+    layout="wide"
+)
 
-    if not os.path.exists(model_path):
-        st.error("⚠️ Model file not found! Please upload the correct model.")
-        return None
-    
-    model = tf.keras.models.load_model(model_path, compile=False)  # ✅ Load model with compile=False
+# ---------------- MODEL ----------------
 
-    # Convert UploadedFile to Image
-    image = Image.open(test_image)
-    image = image.resize((128, 128))
-    input_arr = np.array(image) / 255.0  # Normalize the image
-    input_arr = np.expand_dims(input_arr, axis=0)  # Convert to batch format
+@st.cache_resource
+def load_model():
+    model_path = "trained_plant_disease_model.keras"
+    return tf.keras.models.load_model(model_path, compile=False)
 
-    predictions = model.predict(input_arr)
-    return np.argmax(predictions)
+model = load_model()
 
-# ✅ Sidebar for Navigation
-st.sidebar.title("🌿 Plant Disease Detection System")
-app_mode = st.sidebar.selectbox('Select Page', ['Home', 'Disease Recognition'])
+classes = [
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy"
+]
 
-# ✅ Display Image (Fixed Warning)
-try:
-    img = Image.open('diseases.png')
-    st.image(img, use_container_width=True)  # ✅ Fixed the deprecated parameter
-except FileNotFoundError:
-    st.warning("⚠️ Warning: diseases.png not found!")
+disease_info = {
+    "Potato___Early_blight": {
+        "emoji": "🟤",
+        "description":
+        "Early blight is a fungal disease that creates brown circular spots on potato leaves.",
+        "treatment":
+        "✔ Remove infected leaves\n"
+        "✔ Spray Mancozeb or Chlorothalonil fungicide\n"
+        "✔ Avoid overhead watering"
+    },
 
-# ✅ Home Page
-if app_mode == 'Home':
-    st.markdown("<h1 style='text-align: center;'>Plant Disease Detection System for Sustainable Agriculture</h1>", 
-                unsafe_allow_html=True)
+    "Potato___Late_blight": {
+        "emoji": "⚫",
+        "description":
+        "Late blight is a dangerous disease that spreads rapidly in cool and humid weather.",
+        "treatment":
+        "✔ Remove infected plants\n"
+        "✔ Spray Copper based fungicide\n"
+        "✔ Improve air circulation"
+    },
 
-# ✅ Disease Recognition Page
-elif app_mode == 'Disease Recognition':
-    st.header('🔍 Plant Disease Detection')
-
-    test_image = st.file_uploader('📤 Upload an Image:', type=['jpg', 'png', 'jpeg'])
-
-    if test_image:
-        st.image(test_image, use_container_width=True, caption="Uploaded Image")  # ✅ Fixed the deprecated parameter
-
-        if st.button('🔮 Predict'):
-            st.snow()
-            st.write('🔍 Analyzing the Image...')
-
-            result_index = model_prediction(test_image)
-
-            if result_index is not None:
-                class_name = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___Healthy']
-                st.success(f'🌱 Model Prediction: **{class_name[result_index]}**')
+    "Potato___healthy": {
+        "emoji": "🌱",
+        "description":
+        "The potato leaf appears healthy and disease free.",
+        "treatment":
+        "✔ No treatment required\n"
+        "✔ Continue proper watering\n"
+        "✔ Monitor crop regularly"
+    }
+}
 
 
+# ---------------- SIDEBAR ----------------
+
+st.sidebar.title("🌿 Plant Disease Detection")
+
+page = st.sidebar.selectbox(
+    "Select Page",
+    ["Home", "Disease Recognition"]
+)
 
 
+# ---------------- HOME ----------------
 
+if page == "Home":
+
+    st.title("🌿 Plant Disease Detection System")
+
+    st.markdown("""
+This project uses a Deep Learning CNN model to detect potato leaf diseases.
+
+### Features
+
+✅ Detect Potato Diseases
+
+✅ Upload Leaf Image
+
+✅ Shows Confidence
+
+✅ Gives Treatment Recommendation
+
+### Supported Diseases
+
+- Potato Early Blight
+- Potato Late Blight
+- Healthy Potato Leaf
+
+---
+Developed using **TensorFlow + Streamlit**
+""")
+
+
+# ---------------- DISEASE PAGE ----------------
+
+if page == "Disease Recognition":
+
+    st.title("🔍 Disease Recognition")
+
+    uploaded = st.file_uploader(
+        "Upload Potato Leaf Image",
+        type=["jpg","jpeg","png"]
+    )
+
+    if uploaded is not None:
+
+        image = Image.open(uploaded)
+
+        st.image(image,
+                 caption="Uploaded Image",
+                 use_container_width=True)
+
+        if st.button("🔮 Predict"):
+
+            img = image.resize((128,128))
+
+            img = np.array(img)/255.0
+
+            img = np.expand_dims(img,axis=0)
+
+            prediction = model.predict(img)
+
+            index = np.argmax(prediction)
+
+            confidence = float(np.max(prediction))*100
+
+            disease = classes[index]
+
+            info = disease_info[disease]
+
+            st.success(
+                f"{info['emoji']} Prediction : {disease.replace('___',' ')}"
+            )
+
+            st.info(
+                f"🎯 Confidence : {confidence:.2f}%"
+            )
+
+            st.subheader("📖 Description")
+
+            st.write(info["description"])
+
+            st.subheader("💊 Recommendation")
+
+            st.success(info["treatment"])
