@@ -2,7 +2,6 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import os
 
 st.set_page_config(
     page_title="Plant Disease Detection",
@@ -10,12 +9,14 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- MODEL ----------------
+# ---------------- MODEL ---------------- #
 
 @st.cache_resource
 def load_model():
-    model_path = "trained_plant_disease_model.keras"
-    return tf.keras.models.load_model(model_path, compile=False)
+    return tf.keras.models.load_model(
+        "trained_plant_disease_model.keras",
+        compile=False
+    )
 
 model = load_model()
 
@@ -26,127 +27,171 @@ classes = [
 ]
 
 disease_info = {
-    "Potato___Early_blight": {
-        "emoji": "🟤",
+
+    "Potato___Early_blight":{
+
+        "emoji":"🟤",
+
         "description":
-        "Early blight is a fungal disease that creates brown circular spots on potato leaves.",
+        "Early Blight is a fungal disease caused by Alternaria solani. Brown spots with concentric rings appear on leaves and reduce crop yield.",
+
         "treatment":
-        "✔ Remove infected leaves\n"
-        "✔ Spray Mancozeb or Chlorothalonil fungicide\n"
-        "✔ Avoid overhead watering"
+        """
+✅ Remove infected leaves
+
+✅ Spray Mancozeb / Chlorothalonil fungicide
+
+✅ Avoid overhead irrigation
+
+✅ Maintain crop rotation
+        """
     },
 
-    "Potato___Late_blight": {
-        "emoji": "⚫",
+    "Potato___Late_blight":{
+
+        "emoji":"⚫",
+
         "description":
-        "Late blight is a dangerous disease that spreads rapidly in cool and humid weather.",
+        "Late Blight is caused by Phytophthora infestans. It spreads rapidly during cool and humid weather and can destroy crops quickly.",
+
         "treatment":
-        "✔ Remove infected plants\n"
-        "✔ Spray Copper based fungicide\n"
-        "✔ Improve air circulation"
+        """
+✅ Remove infected plants immediately
+
+✅ Spray Copper based fungicide
+
+✅ Improve air circulation
+
+✅ Avoid excess moisture
+        """
     },
 
-    "Potato___healthy": {
-        "emoji": "🌱",
+    "Potato___healthy":{
+
+        "emoji":"🌱",
+
         "description":
-        "The potato leaf appears healthy and disease free.",
+        "The uploaded potato leaf appears healthy with no visible disease symptoms.",
+
         "treatment":
-        "✔ No treatment required\n"
-        "✔ Continue proper watering\n"
-        "✔ Monitor crop regularly"
+        """
+✅ No treatment required
+
+✅ Continue regular watering
+
+✅ Use balanced fertilizer
+
+✅ Monitor plants regularly
+        """
     }
 }
 
-
-# ---------------- SIDEBAR ----------------
+# ---------------- SIDEBAR ---------------- #
 
 st.sidebar.title("🌿 Plant Disease Detection")
 
 page = st.sidebar.selectbox(
     "Select Page",
-    ["Home", "Disease Recognition"]
+    ["🏠 Home","🔍 Disease Recognition"]
 )
 
+# ---------------- HOME ---------------- #
 
-# ---------------- HOME ----------------
-
-if page == "Home":
+if page=="🏠 Home":
 
     st.title("🌿 Plant Disease Detection System")
 
+    st.image(
+        "diseases.png",
+        use_container_width=True
+    )
+
     st.markdown("""
-This project uses a Deep Learning CNN model to detect potato leaf diseases.
+## Welcome 👋
 
-### Features
+This application uses a **Deep Learning CNN Model** to identify potato leaf diseases.
 
-✅ Detect Potato Diseases
+### ✨ Features
 
-✅ Upload Leaf Image
-
-✅ Shows Confidence
-
-✅ Gives Treatment Recommendation
-
-### Supported Diseases
-
-- Potato Early Blight
-- Potato Late Blight
-- Healthy Potato Leaf
+- ✅ Detect Potato Diseases
+- ✅ Upload Potato Leaf Images
+- ✅ Prediction Confidence
+- ✅ Disease Description
+- ✅ Treatment Recommendation
 
 ---
+
+### 🦠 Detects
+
+- 🟤 Potato Early Blight
+- ⚫ Potato Late Blight
+- 🌱 Healthy Potato Leaf
+
+---
+
 Developed using **TensorFlow + Streamlit**
 """)
 
+# ---------------- PREDICTION ---------------- #
 
-# ---------------- DISEASE PAGE ----------------
-
-if page == "Disease Recognition":
+if page=="🔍 Disease Recognition":
 
     st.title("🔍 Disease Recognition")
 
-    uploaded = st.file_uploader(
+    uploaded=st.file_uploader(
         "Upload Potato Leaf Image",
         type=["jpg","jpeg","png"]
     )
 
-    if uploaded is not None:
+    if uploaded:
 
-        image = Image.open(uploaded)
+        image=Image.open(uploaded)
 
-        st.image(image,
-                 caption="Uploaded Image",
-                 use_container_width=True)
+        col1,col2=st.columns([1,1])
 
-        if st.button("🔮 Predict"):
-
-            img = image.resize((128,128))
-
-            img = np.array(img)/255.0
-
-            img = np.expand_dims(img,axis=0)
-
-            prediction = model.predict(img)
-
-            index = np.argmax(prediction)
-
-            confidence = float(np.max(prediction))*100
-
-            disease = classes[index]
-
-            info = disease_info[disease]
-
-            st.success(
-                f"{info['emoji']} Prediction : {disease.replace('___',' ')}"
+        with col1:
+            st.image(
+                image,
+                caption="Uploaded Image",
+                use_container_width=True
             )
 
-            st.info(
-                f"🎯 Confidence : {confidence:.2f}%"
-            )
+        with col2:
 
-            st.subheader("📖 Description")
+            st.write("### Ready for Prediction")
 
-            st.write(info["description"])
+            if st.button("🚀 Predict Disease"):
 
-            st.subheader("💊 Recommendation")
+                img=image.resize((128,128))
 
-            st.success(info["treatment"])
+                img=np.array(img)/255.0
+
+                img=np.expand_dims(img,axis=0)
+
+                prediction=model.predict(img)
+
+                index=np.argmax(prediction)
+
+                confidence=np.max(prediction)*100
+
+                disease=classes[index]
+
+                info=disease_info[disease]
+
+                st.success(
+                    f"{info['emoji']} **Prediction : {disease.replace('___',' ')}**"
+                )
+
+                st.progress(int(confidence))
+
+                st.info(
+                    f"🎯 Confidence : **{confidence:.2f}%**"
+                )
+
+                st.subheader("📖 Disease Description")
+
+                st.write(info["description"])
+
+                st.subheader("💊 Recommended Treatment")
+
+                st.success(info["treatment"])
