@@ -1,26 +1,94 @@
 # AICTE-Internship-potato-project
 
-#🍂 Potato Disease Detection
-  About the Project
-This project aims to develop a deep learning-based image classification model to detect diseases in potato leaves. Using Convolutional Neural Networks (CNNs), the model classifies potato leaves into different categories based on their health conditions. The goal is to help farmers and agricultural researchers quickly identify plant diseases, leading to early intervention and improved crop yield.
+A Deep Learning based web application that detects potato leaf diseases from uploaded images using TensorFlow and Streamlit.
 
-  Features:
-Image-based disease classification: The model predicts whether a potato leaf is healthy or affected by Late Blight or Early Blight.
-Deep Learning Approach: Utilizes a CNN model trained on a dataset of potato leaf images.
-Dataset Handling: Processes images into training, validation, and testing datasets.
-High Accuracy: Model optimized using Adam optimizer and categorical cross-entropy loss.
-Deployment Ready: Can be integrated into a web or mobile application for real-world use.
+## 🚀 Live Demo
 
-🛠 Technologies Used:
-TensorFlow / Keras – for model training and evaluation.
-OpenCV & Matplotlib – for image processing and visualization.
-Python – for scripting and data handling.
-Jupyter Notebook / Colab – for training and experimentation.
+[(https://potatodisease.streamlit.app/)](https://potatodisease.streamlit.app/)
 
-## Model Files
+---
 
-You can download the trained model files from the following links:
+## 📌 Features
 
-- [Download trained_plant_disease_model.keras](https://drive.google.com/file/d/1g5bTVxkdDHs0CPuXGaFyOCWREbEEPDx-/view?usp=sharing)
-- [Download trained_model.h5](https://drive.google.com/file/d/1Mg2QkDYO1PdTlur5De79zxmBSSkmtKiw/view?usp=sharing)
+- 🌿 Detect Potato Leaf Diseases
+- 📷 Upload Leaf Images
+- 🤖 CNN-based Prediction
+- 📊 Confidence Score
+- 💊 Disease Description
+- ✅ Treatment Recommendation
+- ☁️ Live Deployment using Streamlit Cloud
 
+---
+
+## 🦠 Supported Diseases
+
+- Potato Early Blight
+- Potato Late Blight
+- Healthy Potato Leaf
+
+---
+
+## 🛠 Tech Stack
+
+- Python
+- TensorFlow / Keras
+- Streamlit
+- NumPy
+- Pillow
+
+---
+
+## 📂 Project Structure
+
+```
+Plant-Disease-Detection
+│
+├── Potato___Early_blight/
+├── Potato___Late_blight/
+├── Potato___healthy/
+├── trained_plant_disease_model.keras
+├── web.py
+├── requirements.txt
+├── diseases.png
+└── README.md
+```
+
+---
+
+## ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/akshzz007/AICTE-Internship-potato-project.git
+```
+
+Move inside folder
+
+```bash
+cd AICTE-Internship-potato-project
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the project
+
+```bash
+streamlit run web.py
+```
+
+---
+
+## 📷 How It Works
+
+1. Upload a potato leaf image.
+2. Click **Predict Disease**.
+3. The CNN model predicts the disease.
+4. Confidence score is displayed.
+5. Disease description and treatment recommendation are shown.
+
+---
